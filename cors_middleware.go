@@ -11,7 +11,7 @@ type Cors struct {
 func (c *Cors) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	w.Header().Add("Access-Control-Allow-Origin", "*")
 	w.Header().Add("Access-Control-Allow-Headers", "Authorization, Content-type")
-	w.Header().Add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, HEAD")
+	w.Header().Add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, HEAD, PATCH")
 	if r.Method == "OPTIONS" {
 		w.WriteHeader(http.StatusOK)
 		return

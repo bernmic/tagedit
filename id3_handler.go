@@ -105,3 +105,8 @@ func getRating(id3tag tag.Metadata) int {
 	}
 	return 0
 }
+
+func (c *Config) updateID3(song SongMetadata) error {
+	l(SEVERITY_INFO, fmt.Sprintf("Updating song: %s", song.Path))
+	return nil
+}
