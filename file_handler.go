@@ -6,8 +6,6 @@ import (
 	"net/http"
 	"os"
 	"strings"
-
-	"github.com/xhenner/mp3-go"
 )
 
 type DirectoryList struct {
@@ -45,8 +43,9 @@ func (c *Config) directoryList(w http.ResponseWriter, r *http.Request) {
 }
 
 type Cover struct {
-	Data []byte `json:"data"`
-	MIME string `json:"mime"`
+	Data        []byte `json:"data"`
+	MIME        string `json:"mime"`
+	Description string `json:"description"`
 }
 
 type SongMetadata struct {
@@ -63,8 +62,10 @@ type SongMetadata struct {
 	Lyrics   string `json:"lyrics,omitempty"`
 	Disc     string `json:"disc,omitempty"`
 	// for changes
-	Changed bool   `json:"changed,omitempty"`
-	NewName string `json:"new_name,omitempty"`
+	Changed     bool   `json:"changed,omitempty"`
+	NewName     string `json:"new_name,omitempty"`
+	RemoveId3v1 bool   `json:"remove_id3v1,omitempty"`
+	RemoveId3v2 bool   `json:"remove_id3v2,omitempty"`
 	// readonly attributes
 	FileType    string `json:"file_type,omitempty"`
 	Format      string `json:"format,omitempty"`
@@ -73,6 +74,8 @@ type SongMetadata struct {
 	Duration    int    `json:"duration,omitempty"`
 	StereoMode  string `json:"stereo_mode,omitempty"`
 	BitrateMode string `json:"bitrate_mode,omitempty"`
+	HasID3V1    bool   `json:"has_id3_v1,omitempty"`
+	HasID3V2    bool   `json:"has_id3_v2,omitempty"`
 }
 
 type SongList struct {
@@ -120,15 +123,34 @@ func (c *Config) songList(w http.ResponseWriter, r *http.Request) {
 
 func (c *Config) songMetadata(path string) (SongMetadata, error) {
 	song := SongMetadata{Path: path}
-	mp3File, err := mp3.Examine(path, false)
+	streamInfo, err := StreamInfo(path)
 	if err != nil {
 		return song, err
 	}
-	song.Bitrate = mp3File.Bitrate
-	song.Samplerate = mp3File.Sampling
-	song.Duration = int(mp3File.Length)
-	song.StereoMode = mp3File.Mode
-	song.BitrateMode = mp3File.Type
+	song.Bitrate = int(streamInfo.Bitrate)
+	song.Samplerate = int(streamInfo.Samplerate)
+	song.Duration = int(streamInfo.Duration)
+	switch streamInfo.ChannelMode {
+	case 0:
+		song.StereoMode = "Stereo"
+		break
+	case 1:
+		song.StereoMode = "Joint Stereo"
+		break
+	case 2:
+		song.StereoMode = "Dual Mono"
+		break
+	case 3:
+		song.StereoMode = "Mono"
+		break
+	}
+	//song.StereoMode = streamInfo.
+	if streamInfo.Vbr {
+		song.BitrateMode = "VBR"
+	} else {
+		song.BitrateMode = "CBR"
+	}
 
-	return c.parseID3(song)
+	song.HasID3V1 = HasID3V1(path)
+	return c.parseID3New(song)
 }
