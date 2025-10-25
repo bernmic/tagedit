@@ -27,10 +27,18 @@ func (c *Config) parseID3New(song SongMetadata) (SongMetadata, error) {
 	song.Genre = id3tag.Genre()
 	song.Track = id3tag.GetTextFrame(TRCK).Text
 	song.Composer = id3tag.GetTextFrame(TCOM).Text
-	song.Comment = id3tag.GetTextFrame(COMM).Text
 	song.Lyrics = id3tag.GetTextFrame(TEXT).Text
 	song.Disc = id3tag.GetTextFrame(TMED).Text
-	frames := id3tag.GetFrames(APIC)
+	frames := id3tag.GetFrames(COMM)
+	if len(frames) > 0 {
+		for _, frame := range frames {
+			comment, ok := frame.(id3v2.CommentFrame)
+			if ok {
+				song.Comment = comment.Text
+			}
+		}
+	}
+	frames = id3tag.GetFrames(APIC)
 	if len(frames) > 0 {
 		covers := make([]Cover, 0)
 		for _, frame := range frames {
