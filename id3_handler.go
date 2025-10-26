@@ -22,6 +22,7 @@ func (c *Config) parseID3New(song SongMetadata) (SongMetadata, error) {
 	song.HasID3V2 = id3tag.HasFrames()
 	song.Title = id3tag.Title()
 	song.Artist = id3tag.Artist()
+	song.AlbumArtist = id3tag.GetTextFrame(TPE2).Text
 	song.Album = id3tag.Album()
 	song.Year = id3tag.Year()
 	song.Genre = id3tag.Genre()

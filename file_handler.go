@@ -49,18 +49,19 @@ type Cover struct {
 }
 
 type SongMetadata struct {
-	Path     string `json:"path,omitempty"`
-	Title    string `json:"title,omitempty"`
-	Artist   string `json:"artist,omitempty"`
-	Album    string `json:"album,omitempty"`
-	Genre    string `json:"genre,omitempty"`
-	Track    string `json:"track,omitempty"`
-	Year     string `json:"year,omitempty"`
-	Cover    Cover  `json:"cover,omitempty"`
-	Composer string `json:"composer,omitempty"`
-	Comment  string `json:"comment,omitempty"`
-	Lyrics   string `json:"lyrics,omitempty"`
-	Disc     string `json:"disc,omitempty"`
+	Path        string `json:"path,omitempty"`
+	Title       string `json:"title,omitempty"`
+	Artist      string `json:"artist,omitempty"`
+	AlbumArtist string `json:"album_artist,omitempty"`
+	Album       string `json:"album,omitempty"`
+	Genre       string `json:"genre,omitempty"`
+	Track       string `json:"track,omitempty"`
+	Year        string `json:"year,omitempty"`
+	Cover       Cover  `json:"cover,omitempty"`
+	Composer    string `json:"composer,omitempty"`
+	Comment     string `json:"comment,omitempty"`
+	Lyrics      string `json:"lyrics,omitempty"`
+	Disc        string `json:"disc,omitempty"`
 	// for changes
 	Changed     bool   `json:"changed,omitempty"`
 	NewName     string `json:"new_name,omitempty"`
