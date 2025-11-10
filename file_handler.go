@@ -26,6 +26,7 @@ func (c *Config) directoryList(w http.ResponseWriter, r *http.Request) {
 	dl := DirectoryList{Directories: make([]string, 0), Count: 0}
 	entries, err := os.ReadDir(p)
 	if err != nil {
+		l(SEVERITY_ERROR, fmt.Sprintf("Error reading directory %s: %v", p, err))
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
