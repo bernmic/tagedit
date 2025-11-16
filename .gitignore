@@ -5,6 +5,8 @@
 /tmp
 /out-tsc
 /bazel-out
+tagedit
+*.exe
 
 # Node
 /node_modules
