@@ -6,7 +6,7 @@ import (
 	"github.com/bogem/id3v2/v2"
 )
 
-func (c *Config) parseID3New(song SongMetadata) (SongMetadata, error) {
+func (c *Config) parseID3(song SongMetadata) (SongMetadata, error) {
 	id3tag, err := id3v2.Open(song.Path, id3v2.Options{Parse: true})
 	if err != nil {
 		l(SEVERITY_ERROR, fmt.Sprintf("error while opening mp3 file %s: %v", song.Path, err))

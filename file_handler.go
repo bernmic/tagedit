@@ -154,5 +154,5 @@ func (c *Config) songMetadata(path string) (SongMetadata, error) {
 	}
 
 	song.HasID3V1 = HasID3V1(path)
-	return c.parseID3New(song)
+	return c.parseID3(song)
 }

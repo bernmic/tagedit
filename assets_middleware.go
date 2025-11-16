@@ -2,6 +2,7 @@ package main
 
 import (
 	"embed"
+	"fmt"
 	"net/http"
 	"strings"
 )
@@ -20,9 +21,12 @@ func (a *Asset) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		r.URL.Path = path
 	}
 	if f, err := assets.Open(assetFile(path)); err == nil {
-		f.Close()
-		handleAssets(w, r)
-		return
+		if err = f.Close(); err == nil {
+			l(SEVERITY_WARN, fmt.Sprintf("error closing asset file %s: %v", assetFile(path), err))
+		} else {
+			handleAssets(w, r)
+			return
+		}
 	}
 	a.handler.ServeHTTP(w, r)
 }
